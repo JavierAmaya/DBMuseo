@@ -107,30 +107,32 @@ ON o.ObraName = oa.ObraName
 ORDER BY oa.mes
 
 ------ 15% de la renta de una obra es del proveedor 
-WITH Obras_Alquiladas AS (
+WITH ventasProveedor AS (
     SELECT 
-        obr.ObraName,
-        obr.ProveedorID,
-        MONTH(OrderDate) as mes,
+        p.ProveedorID,
         YEAR(OrderDate) as anio,
-        SUM(obr.RentalPrice*0.15) as Ganancia
-    FROM museo.OrderDetails as od
-    INNER JOIN museo.Obras as obr 
-    ON od.ObraID = obr.ObraID
-    INNER JOIN museo.Orden as o 
-    ON od.OrdenID = o.OrdenID
-    GROUP BY   
-        obr.ObraName,
-        obr.ProveedorID,
-        MONTH(OrderDate),
-        YEAR(OrderDate)
-)
-SELECT 
-    p.ProveedorName,
-    oa.anio,
-    isnull(oa.mes,0) as Meses,
-    isnull(oa.Ganancia,0) AS Ganancia
-FROM museo.Proveedores AS p
-LEFT JOIN Obras_Alquiladas  as oa
-ON p.ProveedorID = oa.ProveedorID
-ORDER BY oa.mes
+        MONTH(OrderDate) as mes,
+        sum(p.RentalPrice*0.15) as Ganancia
+    FROM museo.Orden AS o
+    INNER JOIN museo.OrderDetails AS od
+    ON o.OrdenID = od.OrdenID
+    INNER JOIN museo.Obras AS p
+    ON od.ObraID = p.ObraID
+    GROUP BY 
+        p.ProveedorID,
+        YEAR(OrderDate),
+        MONTH(OrderDate)
+), [TIME] AS (
+SELECT DISTINCT vp.mes , vp.anio 
+FROM ventasProveedor as vp )
+SELECT p.ProveedorID,p.ProveedorName,
+    tm.mes,
+    tm.anio,
+    isnull(vp.Ganancia,0) as Ganancia
+FROM museo.Proveedores as p
+INNER JOIN [TIME] as tm
+ON 1=1
+LEFT JOIN ventasProveedor as vp 
+ON p.ProveedorID = vp.ProveedorID
+    AND tm.mes = vp.mes AND tm.anio = vp.anio
+ORDER BY p.ProveedorID
