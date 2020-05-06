@@ -1,0 +1,12 @@
+EXEC myExample.SP_CREATE_SUPPLIER 
+@SupplierID = 111,
+@SupplierName = 'Proveedor1',
+@ContactName = 'Simon',
+@Address = 'Olancho',
+@City = 'La Union',
+@PostalCode = '12312',
+@Country = 'Honduras',
+@Phone = '234987435'
+
+EXEC myExample.SP_DELETE_SUPPLIER 
+@SupplierID = 1

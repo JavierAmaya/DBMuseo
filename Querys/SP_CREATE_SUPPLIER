@@ -1,0 +1,19 @@
+CREATE PROCEDURE myExample.SP_CREATE_SUPPLIER
+    @SupplierID int,
+    @SupplierName nvarchar(500),
+    @ContactName nvarchar(500),
+    @Address nvarchar(2000),
+    @City nvarchar(500),
+    @PostalCode nvarchar(500),
+    @Country nvarchar(500),
+    @Phone nvarchar(500)
+AS
+
+DECLARE @existe  INT = (SELECT COUNT(*) as N FROM myExample.Suppliers where SupplierID = @SupplierID)
+IF @existe > 0 BEGIN
+    SELECT 0  as successed, 'El ID enviado ya existe' as MSG
+END ELSE BEGIN    
+    INSERT INTO myExample.Suppliers
+    VALUES (@SupplierID,@SupplierName,@ContactName,@Address,@City,@PostalCode,@Country,@Phone)
+    SELECT 1 as successed, 'Tu registro fue almacenado' as MSG
+END    
