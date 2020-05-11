@@ -1,0 +1,10 @@
+DELETE FROM pFacturas.DetalleFactura;
+DELETE FROM pFacturas.FacturaCliente;
+DELETE FROM pFacturas.Cliente;
+DELETE FROM pFacturas.Factura;
+DELETE FROM pFacturas.Producto;
+DELETE FROM pFacturas.Proveedor;
+DELETE FROM pFacturas.Categoria;
+DELETE FROM pFacturas.Empleado;
+DELETE FROM pFacturas.TipoEmpleado;
+DELETE FROM pFacturas.TipoFactura;
